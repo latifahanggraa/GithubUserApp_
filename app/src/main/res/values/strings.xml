@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">GithubUserApp</string>
+    <string name="username">Username</string>
+    <string name="searchbar_hint">Mau cari siapa?</string>
+    <string name="name">Nama</string>
+    <string name="tv_username">Username</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+</resources>
