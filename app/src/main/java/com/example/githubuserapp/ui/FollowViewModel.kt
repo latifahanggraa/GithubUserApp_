@@ -25,7 +25,7 @@ class FollowViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _detailUser.value = response.body()
                 } else {
-                    Log.d("message", response.message())
+                    Log.e("message", response.message())
                 }
             }
 

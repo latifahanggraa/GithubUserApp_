@@ -12,6 +12,9 @@ class DetailUserActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailUserBinding
 
+    companion object{
+        const val EXTRA_USER = "extra_user"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,8 +37,10 @@ class DetailUserActivity : AppCompatActivity() {
 
     private fun setDetailUser(user: DetailUserResponse?) {
         Glide.with(this).load(user?.avatarUrl).into(binding.profileImage)
+
         binding.tvUsername.text = user?.login
         binding.tvItemName.text = user?.name
+
         "${user?.followers} Follower".also { binding.tvFollowers.text = it }
         "${user?.following} Following".also { binding.tvFollowing.text = it }
     }
