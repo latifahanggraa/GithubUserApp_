@@ -9,11 +9,11 @@ interface ApiService {
 
     @GET("search/users")
     fun getUsername(
-       @Query("q") q : String
+       @Query("q") username: String
     ): Call<GithubResponse>
 
     @GET("users/{username}")
     fun getDetailUser(
-        @Path("username") username: String
+        @Query("username") username: String
     ): Call<DetailUserResponse>
 }

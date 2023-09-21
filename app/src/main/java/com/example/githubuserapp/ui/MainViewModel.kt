@@ -10,11 +10,11 @@ import com.example.githubuserapp.data.retrofit.ApiConfig
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Callback
-
+import kotlinx.coroutines.Dispatchers
 class MainViewModel : ViewModel() {
 
-    private val _user = MutableLiveData<List<ItemsItem>>()
-    val user: LiveData<List<ItemsItem>> = _user
+    private val _userList = MutableLiveData<List<ItemsItem>>()
+    val userList: LiveData<List<ItemsItem>> = _userList
 
     private val _isloading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isloading
@@ -24,13 +24,18 @@ class MainViewModel : ViewModel() {
         private const val USER_ID = "anggra"
     }
 
-    init {
-        findGithubResponse()
+    fun setUsername(query:  String){
+        findGithubResponse(query)
     }
 
-    private fun findGithubResponse() {
+    init {
+        findGithubResponse(USER_ID)
+    }
+
+    private fun findGithubResponse(query: String) {
+
         _isloading.value = true
-        val client = ApiConfig.getApiService().getUsername(USER_ID)
+        val client = ApiConfig.getApiService().getUsername(query)
         client.enqueue(object : Callback<GithubResponse> {
             override fun onResponse(
                 call: Call<GithubResponse>,
@@ -38,7 +43,7 @@ class MainViewModel : ViewModel() {
             ) {
                 _isloading.value = false
                 if (response.isSuccessful){
-                    _user.value = response.body()?.items
+                    _userList.value = response.body()?.items
                 }else{
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
@@ -46,7 +51,7 @@ class MainViewModel : ViewModel() {
 
             override fun onFailure(call: Call<GithubResponse>, t: Throwable) {
                 _isloading.value = false
-                Log.e(TAG, "onFailure: ${t.message}")
+                Log.e(TAG, "onFailure: ${t.message.toString()}")
             }
         })
     }

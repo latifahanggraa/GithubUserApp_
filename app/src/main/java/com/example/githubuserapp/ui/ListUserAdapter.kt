@@ -1,7 +1,10 @@
 package com.example.githubuserapp.ui
 
+import android.content.Intent
 import android.view.LayoutInflater
+import android.view.ScrollCaptureCallback
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -26,11 +29,16 @@ class ListUserAdapter : ListAdapter<ItemsItem, ListUserAdapter.MyViewHolder>(DIF
     class MyViewHolder(val binding: ListUserBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(user: ItemsItem){
             binding.apply {
-                Glide.with(binding.root.context)
+                Glide.with(itemView.context)
                     .load(user.avatarUrl)
                     .into(profileImage)
-                binding.tvItemName.text = user.login
+                tvItemName.text = user.login
 
+                binding.cardView.setOnClickListener {
+                    val intent = Intent(itemView.context, DetailUserActivity::class.java)
+                    intent.putExtra("user", user.login)
+                    itemView.context.startActivity(intent)
+                }
             }
         }
     }
@@ -47,5 +55,6 @@ class ListUserAdapter : ListAdapter<ItemsItem, ListUserAdapter.MyViewHolder>(DIF
         }
     }
 }
+
 
 

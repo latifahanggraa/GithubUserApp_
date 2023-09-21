@@ -9,12 +9,27 @@ import com.example.githubuserapp.databinding.ListUserBinding
 class DetailUserActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailUserBinding
+    private lateinit var username: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityDetailUserBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_detail_user)
+        setContentView(binding.root)
+
+        val userId = intent.getStringExtra("USER_ID")
+
+        binding.profileImage
+        binding.tvItemName
+        binding.tvUsername
+        binding.tvFollowers
+        binding.tvFollowing
+        binding.tabs
+        binding.viewPager
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
+
+    
+
 }

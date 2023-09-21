@@ -20,6 +20,8 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
+
+
     private lateinit var binding: ActivityMainBinding
 
 
@@ -37,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         val mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
-        mainViewModel.user.observe(this){ ItemsItem ->
+        mainViewModel.userList.observe(this){ ItemsItem ->
             setUserData(ItemsItem)
         }
 
@@ -58,7 +60,10 @@ class MainActivity : AppCompatActivity() {
                 .setOnEditorActionListener { textView, actionId, event ->
                     searchBar.text = searchView.text
                     searchView.hide()
-                    Toast.makeText(this@MainActivity, searchView.text, Toast.LENGTH_SHORT).show()
+                    val query = searchView.text.toString().trim()
+                    if (query.isNotEmpty()) {
+                        mainViewModel.setUsername(searchView.text.toString().trim())
+                    }
                     false
                 }
         }
@@ -77,5 +82,6 @@ class MainActivity : AppCompatActivity() {
         val adapter = ListUserAdapter()
         adapter.submitList(items)
         binding.rvListUser.adapter = adapter
+
     }
 }
