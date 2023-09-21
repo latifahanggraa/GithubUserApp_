@@ -2,14 +2,15 @@ package com.example.githubuserapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.githubuserapp.R
+import android.util.Log
+import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.example.githubuserapp.data.response.DetailUserResponse
 import com.example.githubuserapp.databinding.ActivityDetailUserBinding
-import com.example.githubuserapp.databinding.ListUserBinding
 
 class DetailUserActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailUserBinding
-    private lateinit var username: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,19 +18,26 @@ class DetailUserActivity : AppCompatActivity() {
         binding = ActivityDetailUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val userId = intent.getStringExtra("USER_ID")
-
-        binding.profileImage
-        binding.tvItemName
-        binding.tvUsername
-        binding.tvFollowers
-        binding.tvFollowing
-        binding.tabs
-        binding.viewPager
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val userId = intent.getStringExtra("user")
+        Log.d("user id",userId.toString())
+
+        val followViewModel = ViewModelProvider(this,ViewModelProvider.NewInstanceFactory())[FollowViewModel::class.java]
+
+        followViewModel.getDetailUser(userId.toString())
+
+        followViewModel.detailUser.observe(this){
+            user -> setDetailUser(user)
+        }
     }
 
-    
+    private fun setDetailUser(user: DetailUserResponse?) {
+        Glide.with(this).load(user?.avatarUrl).into(binding.profileImage)
+        binding.tvUsername.text = user?.login
+        binding.tvItemName.text = user?.name
+        "${user?.followers} Follower".also { binding.tvFollowers.text = it }
+        "${user?.following} Following".also { binding.tvFollowing.text = it }
+    }
 
 }

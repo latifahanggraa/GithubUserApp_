@@ -2,9 +2,7 @@ package com.example.githubuserapp.ui
 
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.ScrollCaptureCallback
 import android.view.ViewGroup
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,9 +11,6 @@ import com.example.githubuserapp.data.response.ItemsItem
 import com.example.githubuserapp.databinding.ListUserBinding
 
 class ListUserAdapter : ListAdapter<ItemsItem, ListUserAdapter.MyViewHolder>(DIFF_CALLBACK) {
-
-    private lateinit var binding: ListUserBinding
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder{
         val binding = ListUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyViewHolder(binding)
@@ -26,7 +21,7 @@ class ListUserAdapter : ListAdapter<ItemsItem, ListUserAdapter.MyViewHolder>(DIF
         holder.bind(user)
     }
 
-    class MyViewHolder(val binding: ListUserBinding) : RecyclerView.ViewHolder(binding.root){
+    class MyViewHolder(private val binding: ListUserBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(user: ItemsItem){
             binding.apply {
                 Glide.with(itemView.context)
