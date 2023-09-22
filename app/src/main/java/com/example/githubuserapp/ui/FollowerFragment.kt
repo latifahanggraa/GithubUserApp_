@@ -7,65 +7,74 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.githubuserapp.data.response.DetailUserResponse
+import com.example.githubuserapp.data.response.ItemsItem
 import com.example.githubuserapp.databinding.FragmentFollowerBinding
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 
 class FollowerFragment : Fragment() {
     private lateinit var binding: FragmentFollowerBinding
     private lateinit var adapter: ListUserAdapter
     private lateinit var username: String
-    private lateinit var viewModel: FollowViewModel
-    private var position: Int = 0
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
-    }
+    private var position: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentFollowerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         arguments?.let {
-            position = it.getInt(ARG_POSITION)
-            username= it.getString(ARG_USERNAME)!!
+            position = it.getInt(ARG_POSITION,0)
+            username = it.getString(ARG_USERNAME).toString()
         }
+
+        adapter = ListUserAdapter()
 
         val layoutManager = LinearLayoutManager(requireContext())
         binding.rvFollower.layoutManager = layoutManager
+        binding.rvFollower.adapter = adapter
 
-        if (isAdded && isDetached){
-            val followViewModel = ViewModelProvider(
-                this,
-                ViewModelProvider.NewInstanceFactory()
-            )[FollowViewModel::class.java]
+        val followViewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.NewInstanceFactory()
+        )[FollowViewModel::class.java]
 
-            followViewModel.detailUser.observe(viewLifecycleOwner){
-                showLoading(it)
+        if(position == 1){
+            followViewModel.getFollowers(username)
+            followViewModel.listFollowers.observe(viewLifecycleOwner){
+                    follow -> setFollow(follow)
             }
+        }else{
+            followViewModel.getFollowing(username)
+            followViewModel.listFollowing.observe(viewLifecycleOwner)
+            {
+                follow -> setFollow(follow)
+            }
+        }
+
+        followViewModel.isLoading.observe(viewLifecycleOwner){
+            showLoading(it)
         }
     }
 
-    private fun showLoading(detailUser: DetailUserResponse) {
+    private fun setFollow(follow: List<ItemsItem?>?) {
+        adapter.submitList(follow)
+    }
 
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading){
+            binding.pbFollower.visibility = View.VISIBLE
+        }else{
+            binding.pbFollower.visibility = View.GONE
+        }
     }
 
     companion object {
-        var ARG_USERNAME: String = ""
+        var ARG_USERNAME = "username"
         var ARG_POSITION = "section_number"
     }
 }
